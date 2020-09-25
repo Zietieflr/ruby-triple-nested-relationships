@@ -5,12 +5,12 @@ class UsersController < ApplicationController
   def index
     @users = User.all
 
-    render json: @users
+    render json: @users, include: { houses: { include: :rooms } }
   end
 
   # GET /users/1
   def show
-    render json: @user
+    render json: @user, include: { houses: { include: :rooms } }
   end
 
   # POST /users
@@ -18,7 +18,12 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user, status: :created, location: @user
+      render(
+        json: @user,
+        include: { houses: { include: :rooms } },
+        status: :created,
+        location: @user
+      )
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -27,7 +32,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   def update
     if @user.update(user_params)
-      render json: @user
+      render json: @user, include: { houses: { include: :rooms } }
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -46,6 +51,14 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:firstname, :lastname)
+      params.require(:user).permit(
+        :first_name, :last_name,
+        houses_attributes: [
+          :id, :address, :user_id,
+          rooms_attributes: [
+            :id, :name, :house_id
+          ]
+        ]
+      )
     end
 end

@@ -16,4 +16,9 @@ billy_house = House.create(address: '404 Place', user: billy)
 katie_house = House.create(address: '1234 Strongpass', user: katie)
 
 Room.create(name: 'Kitchen', house: billy_house)
+Room.create(name: 'Living Room', house: billy_house)
+Room.create(name: 'Closet', house: billy_house)
+
 Room.create(name: 'Enclosed Porch', house: katie_house)
+Room.create(name: 'Breakfast Nook', house: katie_house)
+Room.create(name: 'Office', house: katie_house)
